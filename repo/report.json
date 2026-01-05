@@ -1,0 +1,64 @@
+{
+  "milestones": [
+    {
+      "title": "Enhance Error Handling in Task Execution",
+      "problem": "Coordinates the issue of inadequate error reporting and handling during sequential task execution, which can cause silent failures or unclear failure modes.",
+      "related_parts": ["taskflow/core.py", "tests/test_core.py"],
+      "suitability": {
+        "first_time_contributors": true,
+        "maintainer_involvement": false,
+        "experimental_unstable": false
+      }
+    },
+    {
+      "title": "Refactor Storage Layer",
+      "problem": "Addresses the limitation of in-memory storage that does not persist data across sessions, leading to data loss.",
+      "related_parts": ["taskflow/storage.py", "tests/test_storage.py"],
+      "suitability": {
+        "first_time_contributors": false,
+        "maintainer_involvement": true,
+        "experimental_unstable": false
+      }
+    },
+    {
+      "title": "Expand CLI Functionality",
+      "problem": "Tackles the incomplete CLI implementation that restricts user interaction and command options.",
+      "related_parts": ["taskflow/cli.py"],
+      "suitability": {
+        "first_time_contributors": true,
+        "maintainer_involvement": false,
+        "experimental_unstable": false
+      }
+    },
+    {
+      "title": "Develop Experimental Parallel Execution Features",
+      "problem": "Focuses on the absence of parallel task execution capabilities, which are needed for performance in workflows with independent tasks.",
+      "related_parts": ["taskflow/core.py", "taskflow/experimental/dag.py", "taskflow/experimental/scheduler.py"],
+      "suitability": {
+        "first_time_contributors": false,
+        "maintainer_involvement": true,
+        "experimental_unstable": true
+      }
+    },
+    {
+      "title": "Document Experimental Modules",
+      "problem": "Resolves the lack of documentation for experimental features, making it difficult for contributors to understand and contribute to them.",
+      "related_parts": ["taskflow/experimental/dag.py", "taskflow/experimental/scheduler.py", "README.md"],
+      "suitability": {
+        "first_time_contributors": true,
+        "maintainer_involvement": false,
+        "experimental_unstable": true
+      }
+    }
+  ],
+  "parallel_work": [
+    "Enhance Error Handling in Task Execution can be done in parallel with Refactor Storage Layer, Expand CLI Functionality, and Document Experimental Modules.",
+    "Refactor Storage Layer can be done in parallel with Enhance Error Handling in Task Execution, Expand CLI Functionality, and Document Experimental Modules.",
+    "Expand CLI Functionality can be done in parallel with Enhance Error Handling in Task Execution, Refactor Storage Layer, and Document Experimental Modules.",
+    "Document Experimental Modules can be done in parallel with Enhance Error Handling in Task Execution, Refactor Storage Layer, and Expand CLI Functionality."
+  ],
+  "blocked_work": [
+    "Develop Experimental Parallel Execution Features is blocked by the completion of Document Experimental Modules, as documentation is needed to coordinate contributions to experimental code.",
+    "Develop Experimental Parallel Execution Features may be blocked by initial development in taskflow/experimental/dag.py and taskflow/experimental/scheduler.py before full parallel support can be integrated into taskflow/core.py."
+  ]
+}
