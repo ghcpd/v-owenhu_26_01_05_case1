@@ -1,0 +1,199 @@
+{
+  "roadmap": {
+    "project": "TaskFlow",
+    "analysis_date": "2026-01-05",
+    "purpose": "Contributor coordination roadmap based on repository state",
+    "milestones": [
+      {
+        "id": "milestone-1",
+        "title": "Stabilize Core & Storage APIs",
+        "problem": "Core execution and storage layers lack error handling, recovery mechanisms, and clear API contracts. This blocks contributors from building features on unstable foundations.",
+        "scope": {
+          "primary_modules": [
+            "taskflow/core.py",
+            "taskflow/storage.py"
+          ],
+          "related_tests": [
+            "tests/test_core.py",
+            "tests/test_storage.py"
+          ],
+          "todo_items": [
+            "Improve error handling",
+            "Refactor storage layer"
+          ]
+        },
+        "coordination_focus": [
+          "Define exception hierarchy for task execution failures",
+          "Add state validation to storage (e.g., duplicate task prevention)",
+          "Establish API documentation for core.run() and storage functions",
+          "Expand test coverage for edge cases (empty task lists, null values, exceptions)"
+        ],
+        "contributor_type": "suitable for first-time contributors with review",
+        "blocking_milestones": [],
+        "parallel_work": [
+          "Can proceed in parallel with CLI commands milestone"
+        ],
+        "rationale": "Both core.py and storage.py are minimal stubs. Current test coverage is basic. Stabilizing these is prerequisite for parallel execution and experimental features."
+      },
+      {
+        "id": "milestone-2",
+        "title": "Implement Comprehensive CLI Interface",
+        "problem": "CLI is incomplete (cli.py only has stub implementation), leaving users unable to interact with TaskFlow from the command line. This coordination gap prevents end-to-end workflow support.",
+        "scope": {
+          "primary_modules": [
+            "taskflow/cli.py"
+          ],
+          "related_modules": [
+            "taskflow/core.py",
+            "taskflow/storage.py"
+          ],
+          "todo_items": [
+            "Add more CLI commands"
+          ]
+        },
+        "coordination_focus": [
+          "Design CLI command structure (e.g., run, list, save, load, delete)",
+          "Map CLI commands to core.py and storage.py functions",
+          "Add argument parsing and validation",
+          "Ensure error messages guide users toward solutions",
+          "Create usage examples in README.md"
+        ],
+        "contributor_type": "suitable for first-time contributors with testing support",
+        "blocking_milestones": [
+          "milestone-1 (requires stable core.run() signature)"
+        ],
+        "parallel_work": [],
+        "rationale": "Cannot fully implement until core.run() and storage layer have stable APIs from milestone-1. CLI design should reflect actual API capabilities."
+      },
+      {
+        "id": "milestone-3",
+        "title": "Promote Experimental DAG & Scheduler to Stable",
+        "problem": "DAG and Scheduler modules are experimental (taskflow/experimental/) with incomplete implementations and undocumented APIs. This uncertainty blocks adoption and contribution of parallel execution features.",
+        "scope": {
+          "primary_modules": [
+            "taskflow/experimental/dag.py",
+            "taskflow/experimental/scheduler.py"
+          ],
+          "related_modules": [
+            "taskflow/core.py"
+          ],
+          "todo_items": [
+            "Add parallel execution support",
+            "Document experimental modules"
+          ]
+        },
+        "coordination_focus": [
+          "Complete DAG class with node/edge management and cycle detection",
+          "Complete scheduler.schedule() with task dependency resolution",
+          "Add docstrings explaining API contracts and limitations",
+          "Create tests demonstrating DAG construction and parallel execution",
+          "Update TODO.md with promotion criteria or move to stable taskflow/ directory",
+          "Document breaking changes (if any) from sequential execution"
+        ],
+        "contributor_type": "requires maintainer involvement for architecture decisions",
+        "blocking_milestones": [
+          "milestone-1 (needs stable core execution model)"
+        ],
+        "parallel_work": [],
+        "rationale": "Experimental modules block parallel execution work. Promotion requires architectural decisions about how DAGs integrate with core.run(), which maintainers must guide."
+      },
+      {
+        "id": "milestone-4",
+        "title": "Enhance Test Coverage & Add Integration Tests",
+        "problem": "Current tests (test_core.py, test_storage.py) cover happy paths only. Missing integration tests, error cases, and cross-module interactions. This coordination gap prevents confident refactoring and feature development.",
+        "scope": {
+          "test_modules": [
+            "tests/test_core.py",
+            "tests/test_storage.py"
+          ],
+          "related_modules": [
+            "taskflow/core.py",
+            "taskflow/storage.py",
+            "taskflow/cli.py"
+          ],
+          "gaps": [
+            "No exception handling tests",
+            "No integration tests between core and storage",
+            "No CLI acceptance tests"
+          ]
+        },
+        "coordination_focus": [
+          "Add error case tests: empty task lists, failing tasks, null inputs",
+          "Add integration tests: core -> storage workflows",
+          "Add parameterized tests for different task types",
+          "Create fixtures for common test scenarios",
+          "Document test strategy in TODO.md or separate TESTING.md"
+        ],
+        "contributor_type": "suitable for first-time contributors",
+        "blocking_milestones": [
+          "milestone-1 (needs stable APIs to test against)"
+        ],
+        "parallel_work": [
+          "Can proceed independently after milestone-1 is defined"
+        ],
+        "rationale": "Better test coverage unblocks confidence in refactoring storage and core. First-time contributors can add tests with clear acceptance criteria."
+      },
+      {
+        "id": "milestone-5",
+        "title": "Coordinate Module Documentation & API Reference",
+        "problem": "Missing public API documentation, no examples of task definition or integration patterns, unclear stability of features. This coordination failure prevents new contributors from understanding contribution boundaries.",
+        "scope": {
+          "documentation_gaps": [
+            "README.md: lacks task definition examples",
+            "taskflow/__init__.py: empty, no public API exports",
+            "No docstrings in core.py, storage.py, cli.py",
+            "No CONTRIBUTING.md guidelines"
+          ],
+          "related_files": [
+            "README.md",
+            "TODO.md",
+            "taskflow/__init__.py"
+          ]
+        },
+        "coordination_focus": [
+          "Add function docstrings (parameters, return types, exceptions) to all public APIs",
+          "Create CONTRIBUTING.md with contribution workflow and review process",
+          "Add examples to README.md: basic task definition, storage usage, CLI examples",
+          "Define public API surface in taskflow/__init__.py",
+          "Create unstable/experimental feature notice in README.md",
+          "Update TODO.md with issue references and status tracking"
+        ],
+        "contributor_type": "suitable for first-time contributors and technical writers",
+        "blocking_milestones": [],
+        "parallel_work": [
+          "Can start immediately for README examples",
+          "Docstrings should begin after milestone-1 APIs are stable"
+        ],
+        "rationale": "Documentation does not require code changes, but unblocks other milestones by clarifying expectations. Can proceed in parallel with milestone-1 for planning."
+      }
+    ],
+    "dependency_graph": {
+      "summary": "Three work streams with controlled blocking relationships",
+      "critical_path": [
+        "milestone-1 (Stabilize Core & Storage) -> milestone-2 (CLI)",
+        "milestone-1 (Stabilize Core & Storage) -> milestone-3 (Experimental Promotion)",
+        "milestone-1 (Stabilize Core & Storage) -> milestone-4 (Test Coverage)"
+      ],
+      "parallel_streams": [
+        "milestone-1 and milestone-2 can start simultaneously if core.py interface is negotiated upfront",
+        "milestone-5 documentation can begin independently"
+      ]
+    },
+    "contribution_guidance": {
+      "first_time_contributors": [
+        "milestone-4: Add test cases for error handling (clear acceptance criteria)",
+        "milestone-5: Improve README examples (no code changes required)",
+        "milestone-1: Error handling improvements with guidance"
+      ],
+      "maintainer_decisions_required": [
+        "milestone-3: DAG promotion and parallel execution architecture",
+        "milestone-1: API stability guarantees and versioning strategy",
+        "milestone-5: Public API surface and stability guarantees"
+      ],
+      "experimental_areas": [
+        "taskflow/experimental/dag.py: unstable, API may change",
+        "taskflow/experimental/scheduler.py: unstable, API may change"
+      ]
+    }
+  }
+}
