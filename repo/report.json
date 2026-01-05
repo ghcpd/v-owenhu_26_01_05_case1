@@ -1,0 +1,145 @@
+{
+  "project": "TaskFlow",
+  "purpose": "Contributor-facing roadmap focused on planning, tracking, and coordinating short-term work grounded in the current repository snapshot.",
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Parallel execution - design & validation",
+      "problem_coordinated": "Coordinate decisions and work required to introduce reliable parallel task execution semantics and a testable executor API (threads/processes/executor abstraction).",
+      "related_files": [
+        "TODO.md (Add parallel execution support)",
+        "taskflow/core.py",
+        "tests/test_core.py",
+        "taskflow/experimental/scheduler.py"
+      ],
+      "suitable_for_first_time_contributors": false,
+      "requires_maintainer_involvement": true,
+      "experimental_or_unstable": true,
+      "work_items": [
+        "Define executor API shape and behavior in `taskflow/core.py`",
+        "Add unit tests for concurrent execution (extend `tests/test_core.py`)",
+        "Prototype a simple thread-based executor in `taskflow/experimental/`",
+        "Update `README.md` and examples with parallel-execution docs"
+      ],
+      "can_be_done_in_parallel": [
+        "Docs and README updates",
+        "Add unit tests for expected semantics",
+        "Prototype executor implementation"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "M2",
+      "title": "Storage layer refactor & pluggable backends",
+      "problem_coordinated": "Coordinate a migration from the current in-memory store to a pluggable, testable storage API so stateful features can rely on stable persistence semantics.",
+      "related_files": [
+        "TODO.md (Refactor storage layer)",
+        "taskflow/storage.py",
+        "tests/test_storage.py",
+        "taskflow/experimental/scheduler.py"
+      ],
+      "suitable_for_first_time_contributors": true,
+      "requires_maintainer_involvement": medium,
+      "experimental_or_unstable": false,
+      "work_items": [
+        "Extract a `Storage` interface and keep current `_STORE` behind an adapter",
+        "Add a file/sqlite in-repo backend implementation and unit tests",
+        "Add migration notes and update `README.md`",
+        "Add CI unit tests exercising new backends"
+      ],
+      "can_be_done_in_parallel": [
+        "Implement additional backends (file / sqlite)",
+        "Write unit tests for loader/save behavior",
+        "Docs and README updates"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "M3",
+      "title": "CLI expansion & contributor-friendly commands",
+      "problem_coordinated": "Coordinate expansion of the command-line surface and ensure contributors can exercise and demo features via CLI for onboarding and reproducible test scenarios.",
+      "related_files": [
+        "TODO.md (Add more CLI commands)",
+        "taskflow/cli.py",
+        "README.md",
+        "tests/test_core.py"
+      ],
+      "suitable_for_first_time_contributors": true,
+      "requires_maintainer_involvement": false,
+      "experimental_or_unstable": false,
+      "work_items": [
+        "Add commands for listing/scheduling/running tasks",
+        "Add CLI-driven integration tests",
+        "Improve CLI help text and examples in `README.md`"
+      ],
+      "can_be_done_in_parallel": [
+        "Add separate CLI subcommands",
+        "Add tests for each command",
+        "Docs and examples"
+      ],
+      "blocked_by": []
+    },
+    {
+      "id": "M4",
+      "title": "Stabilize experimental DAG & scheduler",
+      "problem_coordinated": "Coordinate the effort to document, harden, and either integrate or clearly mark as experimental the `dag` and `scheduler` modules so contributors know how to use or evolve them.",
+      "related_files": [
+        "taskflow/experimental/dag.py",
+        "taskflow/experimental/scheduler.py",
+        "README.md",
+        "TODO.md (Document experimental modules)"
+      ],
+      "suitable_for_first_time_contributors": false,
+      "requires_maintainer_involvement": true,
+      "experimental_or_unstable": true,
+      "work_items": [
+        "Add integration and unit tests for DAG and scheduler behavior",
+        "Document public API and intended guarantees in `README.md`",
+        "Decide and document whether to promote or keep experimental"
+      ],
+      "can_be_done_in_parallel": [
+        "Write documentation and examples",
+        "Add tests for DAG topology and scheduling rules"
+      ],
+      "blocked_by": ["M2", "M1"]
+    },
+    {
+      "id": "M5",
+      "title": "Error handling & test-coverage hardening",
+      "problem_coordinated": "Coordinate improvements to error propagation, deterministic failure modes, and test coverage so contributors can make safe changes without regressions.",
+      "related_files": [
+        "TODO.md (Improve error handling)",
+        "taskflow/core.py",
+        "taskflow/storage.py",
+        "tests/test_core.py",
+        "tests/test_storage.py"
+      ],
+      "suitable_for_first_time_contributors": true,
+      "requires_maintainer_involvement": medium,
+      "experimental_or_unstable": false,
+      "work_items": [
+        "Add tests exercising failure & cleanup paths",
+        "Define and document expected exception types/semantics",
+        "Add CI checks to fail on reduced coverage"
+      ],
+      "can_be_done_in_parallel": [
+        "Add unit tests for `core.run` failure modes",
+        "Add tests for storage error handling",
+        "Write documentation on error semantics"
+      ],
+      "blocked_by": []
+    }
+  ],
+  "parallelization_guidance": {
+    "independent_workstreams": [
+      "Docs & README updates (M1, M2, M3, M4)",
+      "Adding unit tests for separate modules (M1, M2, M3, M5)",
+      "Implementing multiple storage backends (M2)"
+    ],
+    "blocking_relationships": [
+      "M4 (experimental scheduler) should wait for M2 (storage refactor) for persistent-backed features and M1 for executor semantics if scheduler will run tasks in parallel",
+      "M1 can proceed without M2 but long-lived scheduler/stateful features should rely on M2"
+    ]
+  },
+  "how_to_use_this_roadmap": "Pick one milestone and open a small, focused PR that targets its listed files; update `README.md` and add tests. Use the `blocked_by` field to avoid doing work that depends on unresolved refactors."
+}
