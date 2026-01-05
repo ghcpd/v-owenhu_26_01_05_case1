@@ -1,0 +1,192 @@
+{
+  "version": "1.0",
+  "generated_by": "GitHub Copilot",
+  "repo_snapshot": {
+    "root_files": ["README.md", "TODO.md"],
+    "core_modules": ["taskflow/core.py", "taskflow/storage.py", "taskflow/cli.py"],
+    "experimental": ["taskflow/experimental/dag.py", "taskflow/experimental/scheduler.py"],
+    "tests": ["tests/test_core.py", "tests/test_storage.py"],
+    "observations": [
+      "Minimal, working sequential executor in `taskflow/core.py`",
+      "In-memory storage in `taskflow/storage.py` with single test",
+      "CLI is a placeholder (`taskflow/cli.py`)",
+      "Experimental DAG/scheduler modules are stubs",
+      "TODO.md explicitly lists parallel execution, storage refactor, CLI and docs"
+    ]
+  },
+
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Stabilize the storage surface and make it pluggable",
+      "problem_coordinated": "The repository currently relies on a minimal, in-memory storage implementation that is fragile and blocks work requiring persistence, concurrency-safety, or swapping implementations (e.g., file or DB backends). This milestone coordinates the design, refactor, and test strategy so downstream features can rely on a stable storage API.",
+      "related_files": ["taskflow/storage.py", "tests/test_storage.py", "TODO.md"],
+      "suitability": {
+        "first_time_contributor": true,
+        "requires_maintainer_involvement": true,
+        "experimental": false
+      },
+      "recommended_work_items": [
+        "Add an interface/README comment describing public storage API (load_all(), save())",
+        "Refactor `taskflow/storage.py` to expose a clear backend interface (e.g. in-memory adapter + hooks for other adapters)",
+        "Add tests covering concurrent access and clear teardown between tests",
+        "Add a small file-backed adapter used only for integration tests (keeps prod surface unchanged)"
+      ],
+      "acceptance_criteria": [
+        "Storage exposes a documented public API with at least one adapter implementation",
+        "New tests demonstrate isolation and concurrency-safety for the in-memory adapter",
+        "Existing `tests/test_storage.py` passes and is expanded with adapter-focused tests",
+        "Maintainer-approved API docstring or short design note added to repo"
+      ],
+      "can_be_done_in_parallel_with": ["M2", "M4"],
+      "blocked_by": []
+    },
+
+    {
+      "id": "M2",
+      "title": "Turn the CLI into a small, testable contributor surface",
+      "problem_coordinated": "The CLI is currently a placeholder and offers no stable way for contributors or integrators to exercise the library; this milestone coordinates building a minimal, testable command surface and developer docs so contributors can run and validate behavior easily.",
+      "related_files": ["taskflow/cli.py", "taskflow/core.py", "README.md", "TODO.md"],
+      "suitability": {
+        "first_time_contributor": true,
+        "requires_maintainer_involvement": false,
+        "experimental": false
+      },
+      "recommended_work_items": [
+        "Add subcommands: `run` (accepts a python module/function path) and `list-storage` (dev-only) with clear help text",
+        "Write unit tests for the CLI logic (no heavy integration required) and a smoke integration test that runs `main()`",
+        "Document usage examples in `README.md` and `TODO.md`",
+        "Add simple input validation and exit codes to make CLI scriptable"
+      ],
+      "acceptance_criteria": [
+        "CLI has at least one functional subcommand with unit tests",
+        "`python -m taskflow.cli` returns helpful usage and exit codes",
+        "README contains a short 'getting-started' CLI example"
+      ],
+      "can_be_done_in_parallel_with": ["M1", "M4", "M5"],
+      "blocked_by": []
+    },
+
+    {
+      "id": "M3",
+      "title": "Prototype and validate parallel execution (experimental)",
+      "problem_coordinated": "Parallel execution is listed in TODO but currently absent; this milestone coordinates exploratory prototypes, test cases, and API constraints so the community can evaluate approaches without committing to a stable API.",
+      "related_files": ["taskflow/core.py", "taskflow/experimental/scheduler.py", "taskflow/experimental/dag.py", "TODO.md", "tests/test_core.py"],
+      "suitability": {
+        "first_time_contributor": false,
+        "requires_maintainer_involvement": true,
+        "experimental": true
+      },
+      "recommended_work_items": [
+        "Add focused, well-documented prototypes in `taskflow/experimental/` (scheduler + DAG behavior) with no public API commitment",
+        "Provide unit tests that demonstrate correctness on small graphs (non-flaky, deterministic tests)",
+        "Create an ADR or short design note that lists trade-offs (threading vs processes vs async)"
+      ],
+      "acceptance_criteria": [
+        "A reproducible prototype lives under `taskflow/experimental/` with tests",
+        "Design note exists and clearly states that API is experimental",
+        "No changes to the public, stable API in `taskflow/core.py` without maintainer sign-off"
+      ],
+      "can_be_done_in_parallel_with": ["M2", "M4"],
+      "blocked_by": ["M1"]
+    },
+
+    {
+      "id": "M4",
+      "title": "Document and stabilize experimental APIs (DAG & scheduler) for contributor use",
+      "problem_coordinated": "Experimental modules are present but undocumented and lack tests; contributors need coordination on what is experimental vs stable so work doesn't fragment or duplicate effort.",
+      "related_files": ["taskflow/experimental/dag.py", "taskflow/experimental/scheduler.py", "README.md", "TODO.md"],
+      "suitability": {
+        "first_time_contributor": true,
+        "requires_maintainer_involvement": true,
+        "experimental": true
+      },
+      "recommended_work_items": [
+        "Add README section ‘Experimental API’ describing goals and guarantees",
+        "Add usage examples and minimal unit tests for `DAG` and `schedule()` prototypes",
+        "Mark APIs with clear docstrings and a migration/stability policy in `README.md`"
+      ],
+      "acceptance_criteria": [
+        "Experimental modules have documentation and at least one deterministic unit test each",
+        "README clearly states experimental status and how contributors should proceed",
+        "No breaking changes to stable modules are introduced by these docs"
+      ],
+      "can_be_done_in_parallel_with": ["M1", "M2", "M3"],
+      "blocked_by": []
+    },
+
+    {
+      "id": "M5",
+      "title": "Improve error handling and expand test coverage",
+      "problem_coordinated": "Error handling is minimal and test coverage is narrow — this milestone coordinates adding consistent error semantics, input validation, and a broader test-suite so contributors can make safe changes with confidence.",
+      "related_files": ["taskflow/core.py", "taskflow/storage.py", "tests/test_core.py", "tests/test_storage.py", "TODO.md"],
+      "suitability": {
+        "first_time_contributor": true,
+        "requires_maintainer_involvement": false,
+        "experimental": false
+      },
+      "recommended_work_items": [
+        "Audit existing functions for exception types and add docstrings describing raised errors",
+        "Add negative and edge-case tests (empty tasks list, task raising an exception, storage teardown)",
+        "Introduce a small, documented error helper module or exception hierarchy if needed"
+      ],
+      "acceptance_criteria": [
+        "New tests increase coverage for core error paths and are deterministic",
+        "Public functions document their error behavior",
+        "No flaky tests introduced"
+      ],
+      "can_be_done_in_parallel_with": ["M1", "M2"],
+      "blocked_by": []
+    }
+  ],
+
+  "parallelization_advice": {
+    "can_run_in_parallel": {
+      "documentation_and_tests": ["M1", "M2", "M4", "M5"],
+      "CLI_work": ["M2"],
+      "experimental_prototyping": ["M3"]
+    },
+    "must_be_sequential_or_blocked": {
+      "production_parallel_execution": "M3 (production-grade) should wait for M1 (storage refactor) and M4 (DAG API stabilization)",
+      "public_api_refactors": "Require maintainer sign-off before merging"
+    }
+  },
+
+  "blocked_graph": {
+    "M3": ["M1", "M4"],
+    "M1": [],
+    "M2": [],
+    "M4": [],
+    "M5": []
+  },
+
+  "starter_issues_for_first_timers": [
+    {
+      "title": "Add CLI `--help` tests and example to README",
+      "milestone": "M2",
+      "files": ["taskflow/cli.py", "README.md"],
+      "notes": "Small, well-scoped; write unit tests that assert help text and exit code"
+    },
+    {
+      "title": "Add edge-case tests for `run()` (empty list, task raises)",
+      "milestone": "M5",
+      "files": ["taskflow/core.py", "tests/test_core.py"],
+      "notes": "Good first patch: add tests and a short docstring update"
+    },
+    {
+      "title": "Document `taskflow/experimental/` and add an example DAG",
+      "milestone": "M4",
+      "files": ["taskflow/experimental/dag.py", "README.md"],
+      "notes": "Write docs and a trivial unit test; no API changes required"
+    }
+  ],
+
+  "maintenance_notes": {
+    "code_owner_actions": [
+      "Approve storage API design and adapter surface (M1)",
+      "Decide exposure/stability policy for experimental modules (M4)",
+      "Review experimental scheduler prototypes before any changes to stable `core.run` (M3)"
+    ],
+    "recommended_labels": ["good-first-issue", "area:storage", "area:cli", "area:experimental", "needs-review"]
+  }
+}

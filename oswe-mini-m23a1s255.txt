@@ -1,0 +1,101 @@
+User: You are evaluating a Python open-source repository from a Community & Collaboration perspective.
+
+Category: Roadmap / Milestone
+Focus: Planning, tracking, and coordinating future work for contributors.
+
+Your task is NOT to implement features or modify code.
+
+Your task is to analyze the repository snapshot and produce a contributor-facing roadmap that acts as a coordination tool.
+
+Requirements:
+
+1. Identify 3–5 concrete milestones that are grounded in the current repository state and generate report.json.
+2. Each milestone MUST reference existing files, modules, or TODO items in the repository.
+3. For each milestone, specify:
+   - What problem it coordinates (not what feature it adds)
+   - Which parts of the repo it relates to
+   - Whether it is:
+     - Suitable for first-time contributors
+     - Requires maintainer involvement
+     - Experimental / unstable
+4. Explicitly describe:
+   - Which work can be done in parallel
+   - Which work is blocked by other milestones
+5. Do NOT propose timelines, dates, or long-term vision.
+6. Do NOT introduce new features that are not implied by the repository.
+
+
+GitHub Copilot: I'll read the repository README, TODO, core modules and CLI to extract current goals, gaps, and test coverage — then I'll scan experimental modules and tests. Fetching those files now.
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/README.md)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/TODO.md)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/taskflow/core.py)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/taskflow/storage.py)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/taskflow/cli.py)
+
+Findings: README marks several experimental areas and TODO lists concrete gaps (parallel exec, storage refactor, CLI). I'll now read experimental modules and tests to map existing functionality to contributor work. Fetching those files.
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/taskflow/__init__.py)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/taskflow/experimental/dag.py)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/taskflow/experimental/scheduler.py)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/tests/test_core.py)
+
+Read [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/tests/test_storage.py)
+
+I'll create `report.json` in the repo with 5 concrete, repo-grounded milestones, explicit parallel/blocked relationships, and starter issues for contributors.
+
+Created [](file:///d%3A/Bug%20Bash/Community/case_26_01_05/oswe-mini-m23a1s255/v-owenhu_26_01_05_case1/repo/report.json)
+
+## ✅ Done — contributor roadmap created (file: `report.json`)
+
+I inspected the repository snapshot (core executor, in-memory storage, placeholder CLI, experimental DAG/scheduler, and existing tests) and produced a contributor-facing roadmap with 5 concrete, repository-grounded milestones. The roadmap file has been added to the repository as `report.json`.
+
+Highlights
+- Repo state: minimal sequential executor (core.py) + in-memory storage (storage.py) + placeholder CLI and experimental stubs. Tests cover only basic happy paths. ✅
+- Action: a practical, non-opinionated roadmap that organizes contributor work, flags what needs maintainer decisions, and shows which tasks can run in parallel. ⚡
+
+Where to find it
+- report: `report.json` (root of the repository)
+
+Quick next steps (recommended)
+1. Add labels named in the roadmap: good-first-issue, area:storage, area:cli, area:experimental. 🔖  
+2. Triagers/maintainers: review and accept the M1 storage API design note before large refactors. 🔧  
+3. Community: pick any "starter issue" from the roadmap (small, testable, and first-timer friendly). 🌱
+
+--- 
+
+## Snapshot summary (short) 📋
+- Core behavior: core.py — sequential run() (covered by test_core.py).
+- Storage: storage.py — in-memory list; single test (test_storage.py).
+- CLI: cli.py — placeholder; no CLI tests or examples in README.
+- Experimental: dag.py, scheduler.py — stubs, undocumented.
+- TODO.md lists: parallel execution, storage refactor, CLI, and docs.
+
+---
+
+## What I added (concise)
+- A focused, contributor-first roadmap with 5 milestones and explicit:
+  - problem each milestone coordinates (not feature-request framing)
+  - files/modules/TODO references
+  - suitability labels (first-time-friendly / maintainer-needed / experimental)
+  - which tasks can run in parallel and which are blocked
+  - starter issues and acceptance criteria
+
+You can open `report.json` to use the milestones as GitHub issues, project board cards, or contributor onboarding tasks.
+
+---
+
+If you want, I can:
+- Create the three starter issues and add labels in the repository (one-by-one), or
+- Open a PR that adds the short design note / storage-interface proposal requested by M1.
+
+Which of those should I do next?
+
+Made changes.
