@@ -1,0 +1,101 @@
+{
+  "repository": "TaskFlow",
+  "summary": "Contributor-facing roadmap grounded in repository TODOs and existing modules",
+  "milestones": [
+    {
+      "id": "m1-cli-ux",
+      "title": "Coordinate CLI improvements & UX",
+      "problem": "No clear CLI contract or tests; contributors need a coordinated set of small, testable tasks and acceptance criteria for CLI behavior.",
+      "related_files": ["taskflow/cli.py", "README.md", "TODO.md", "tests/test_core.py"],
+      "suitable_for_first_time_contributors": true,
+      "requires_maintainer_involvement": false,
+      "experimental": false,
+      "parallelizable_tasks": [
+        "Add basic tests for CLI behavior (e.g., tests/test_cli.py)",
+        "Improve README docs describing CLI usage",
+        "Add small, well-scoped CLI subcommands (e.g., `list`, `run`) with tests"
+      ],
+      "blocked_by": []
+    },
+
+    {
+      "id": "m2-storage-refactor",
+      "title": "Coordinate storage refactor and persistence strategy",
+      "problem": "Current storage is a single in-memory list; unfolding persistence/backends and thread-safety requires coordinated API and migration plan.",
+      "related_files": ["taskflow/storage.py", "tests/test_storage.py", "TODO.md"],
+      "suitable_for_first_time_contributors": true,
+      "requires_maintainer_involvement": true,
+      "experimental": false,
+      "parallelizable_tasks": [
+        "Add tests that assert store semantics (e.g., isolation, clear/reset)",
+        "Introduce an interface or abstraction layer for storage",
+        "Add simple implementations (in-memory, file-based) behind the abstraction"
+      ],
+      "blocked_by": []
+    },
+
+    {
+      "id": "m3-error-handling",
+      "title": "Coordinate error handling semantics & test coverage",
+      "problem": "No defined behavior when tasks fail (stop vs collect errors); contributors need agreed error model and tests to avoid incompatible implementations.",
+      "related_files": ["taskflow/core.py", "tests/test_core.py", "TODO.md"],
+      "suitable_for_first_time_contributors": true,
+      "requires_maintainer_involvement": true,
+      "experimental": false,
+      "parallelizable_tasks": [
+        "Add tests for common error semantics (task raises exception -> runner behavior)",
+        "Document expected behavior in README",
+        "Implement simple error-handling modes (fail-fast vs collect-and-report)"
+      ],
+      "blocked_by": []
+    },
+
+    {
+      "id": "m4-parallel-execution",
+      "title": "Coordinate parallel execution model and API",
+      "problem": "Parallel execution is on the TODO list but requires coordinated decisions about concurrency model, API surface, and thread-safety across core and storage.",
+      "related_files": ["taskflow/core.py", "taskflow/experimental/scheduler.py", "TODO.md"],
+      "suitable_for_first_time_contributors": false,
+      "requires_maintainer_involvement": true,
+      "experimental": true,
+      "parallelizable_tasks": [
+        "Prototype concurrency using experimental scheduler module",
+        "Add tests validating concurrency behavior (race conditions, ordering guarantees)",
+        "Benchmark small task sets to validate approach"
+      ],
+      "blocked_by": ["m2-storage-refactor", "m3-error-handling"]
+    },
+
+    {
+      "id": "m5-document-experimental",
+      "title": "Document experimental modules and stabilization plan",
+      "problem": "Experimental modules lack usage docs and clear stabilization criteria; contributors need guidance on what is experimental and how to help stabilize (or archive) APIs.",
+      "related_files": ["taskflow/experimental/dag.py", "taskflow/experimental/scheduler.py", "README.md", "TODO.md"],
+      "suitable_for_first_time_contributors": true,
+      "requires_maintainer_involvement": true,
+      "experimental": true,
+      "parallelizable_tasks": [
+        "Add documentation and examples for DAG and scheduler in README or docs/",
+        "Add simple usage examples as tests or examples folder",
+        "Create issues that call out stabilization criteria (e.g., API contract, tests, performance goals)"
+      ],
+      "blocked_by": ["m3-error-handling"]
+    }
+  ],
+
+  "parallel_work_overview": {
+    "parallelizable_across_milestones": [
+      "Documentation and README updates (m1, m3, m5)",
+      "Adding tests and coverage for current behavior (m1, m2, m3)",
+      "Small, non-breaking refactors (splitting files, adding interfaces)"
+    ],
+
+    "blocked_work_examples": {
+      "m4-parallel-execution": ["m2-storage-refactor", "m3-error-handling"],
+      "m5-document-experimental": ["m3-error-handling"]
+    }
+  },
+
+  "usage_notes": "This report is a coordination tool: create issues/labels per milestone (e.g., 'milestone: m2-storage-refactor'), split work into first-timer-friendly tasks where possible, and list maintainer-decisions explicitly (API, semantics, compatibility).",
+  "generated_from": ["README.md", "TODO.md", "taskflow/core.py", "taskflow/storage.py", "taskflow/cli.py", "taskflow/experimental/dag.py", "taskflow/experimental/scheduler.py", "tests/test_core.py", "tests/test_storage.py"]
+}
